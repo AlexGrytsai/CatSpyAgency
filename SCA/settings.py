@@ -139,6 +139,7 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+AUTH_USER_MODEL = "app.AdminCSAModel"
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
