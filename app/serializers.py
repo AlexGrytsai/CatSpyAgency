@@ -18,3 +18,9 @@ class CatSerializer(serializers.ModelSerializer):
                 "style": {"input_type": "password", "placeholder": "Password"},
             }
         }
+
+
+class CatUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CatModel
+        fields = ["salary"]
