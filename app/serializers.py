@@ -95,3 +95,55 @@ class MissionListSerializer(MissionSerializer):
                      "cat",
                      "completed",
                  ] + MissionSerializer.Meta.fields
+
+
+class MissionUpdateSerializer(serializers.ModelSerializer):
+    targets = TargetUpdateSerializer(many=True, read_only=False)
+
+    class Meta:
+        model = MissionModel
+        fields = ["completed", "targets"]
+
+    def update(
+        self, instance: MissionModel, validated_data: dict
+    ) -> MissionModel:
+        targets_data = self.initial_data.get("targets")
+
+        if instance.completed:
+            raise ValidationError("You cannot update a completed mission.")
+
+        if targets_data:
+            target_ids = []
+            for target_data in targets_data:
+                target_id = target_data.get("id")
+                if not target_id:
+                    raise ValidationError("Each target must have an 'id'.")
+
+                try:
+                    target = TargetModel.objects.get(id=target_id)
+                except TargetModel.DoesNotExist:
+                    raise ValidationError(
+                        f"Target with id {target_id} does not exist."
+                    )
+
+                if target.completed:
+                    raise ValidationError(
+                        f"Target with id {target_id} is already completed "
+                        f"and cannot be updated."
+                    )
+                serializer = TargetUpdateSerializer(
+                    instance=target, data=target_data, partial=True
+                )
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+
+                target_ids.append(target)
+
+            instance.targets.set(target_ids)
+
+        for attr, value in validated_data.items():
+            if attr != "targets":
+                setattr(instance, attr, value)
+        instance.save()
+
+        return instance
