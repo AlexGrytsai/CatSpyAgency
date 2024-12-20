@@ -1,8 +1,10 @@
+from typing import List
+
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from app.models import CatModel, TargetModel
+from app.models import CatModel, TargetModel, MissionModel
 
 
 class CatSerializer(serializers.ModelSerializer):
@@ -56,3 +58,28 @@ class TargetUpdateSerializer(serializers.ModelSerializer):
                 "You cannot update the notes because the target is complete."
             )
         return super().update(instance, validated_data)
+
+
+class MissionSerializer(serializers.ModelSerializer):
+    targets = TargetModelSerializer(many=True)
+
+    class Meta:
+        model = MissionModel
+        fields = ["targets"]
+
+    def validate_targets(self, value: List[TargetModel]) -> List[TargetModel]:
+        if not (1 <= len(value) <= 3):
+            raise serializers.ValidationError(
+                "A mission must have between 1 and 3 targets."
+            )
+        return value
+
+    def create(self, validated_data: dict) -> MissionModel:
+        targets_data = validated_data.pop("targets")
+        mission = MissionModel.objects.create(**validated_data)
+
+        for target_data in targets_data:
+            target = TargetModel.objects.create(**target_data)
+            mission.targets.add(target)
+
+        return mission
