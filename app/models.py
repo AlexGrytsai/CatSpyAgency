@@ -82,3 +82,34 @@ class CatModel(AbstractUser):
 
     def __str__(self):
         return self.name
+
+
+class TargetModel(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    country = models.CharField(max_length=100)
+    notes = models.TextField(null=True, blank=True)
+    completed = models.BooleanField(default=False)
+
+
+class MissionModel(models.Model):
+    cat = models.ForeignKey(
+        CatModel,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="missions",
+    )
+    targets = models.ManyToManyField(TargetModel, related_name="missions")
+    completed = models.BooleanField(default=False)
+
+    def check_and_complete_mission(self):
+        if all(target.completed for target in self.targets.all()):
+            self.completed = True
+            self.save()
+
+    def delete(self, *args, **kwargs):
+        if self.cat:
+            raise ValidationError(
+                "Cannot delete a mission with a cat assigned."
+            )
+        super().delete(*args, **kwargs)
