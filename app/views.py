@@ -1,6 +1,9 @@
 from django.http import HttpRequest
-from drf_spectacular.utils import extend_schema_view, extend_schema, \
-    OpenApiResponse
+from drf_spectacular.utils import (
+    extend_schema_view,
+    extend_schema,
+    OpenApiResponse,
+)
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -8,8 +11,13 @@ from rest_framework.response import Response
 
 from app.models import CatModel, MissionModel
 from app.permissions import IsAdminOrCatAssigned
-from app.serializers import CatSerializer, CatUpdateSerializer, \
-    MissionSerializer, MissionListSerializer, MissionUpdateSerializer
+from app.serializers import (
+    CatSerializer,
+    CatUpdateSerializer,
+    MissionSerializer,
+    MissionListSerializer,
+    MissionUpdateSerializer,
+)
 
 
 @extend_schema_view(
@@ -42,7 +50,7 @@ from app.serializers import CatSerializer, CatUpdateSerializer, \
         summary="Delete a specific spy cat",
         description="Delete a specific cat. Need to be admin.",
         tags=["Cats"],
-    )
+    ),
 )
 class CatViewSet(viewsets.ModelViewSet):
     queryset = CatModel.objects.all()
@@ -79,13 +87,13 @@ class CatViewSet(viewsets.ModelViewSet):
     update=extend_schema(
         summary="Update a specific mission",
         description="Update a mission's details. "
-                    "Need to be admin or cat assigned.",
+        "Need to be admin or cat assigned.",
         tags=["Missions"],
     ),
     partial_update=extend_schema(
         summary="Partially update a specific mission",
         description="Partially update a mission's details. "
-                    "Need to be admin or cat assigned.",
+        "Need to be admin or cat assigned.",
         tags=["Missions"],
     ),
     destroy=extend_schema(
@@ -102,21 +110,17 @@ class CatViewSet(viewsets.ModelViewSet):
             400: OpenApiResponse(
                 description="Bad Request, missing or invalid data"
             ),
-            404: OpenApiResponse(
-                description="Cat not found"
-            ),
-        }
+            404: OpenApiResponse(description="Cat not found"),
+        },
     ),
     finish_mission=extend_schema(
         summary="Finish a mission",
         description="Finish a mission and unassign the cat. Need to be admin.",
         tags=["Missions"],
         responses={
-            200: OpenApiResponse(
-                description="Mission completed"
-            ),
-        }
-    )
+            200: OpenApiResponse(description="Mission completed"),
+        },
+    ),
 )
 class MissionViewSet(viewsets.ModelViewSet):
     queryset = (
@@ -180,7 +184,7 @@ class MissionViewSet(viewsets.ModelViewSet):
             return Response(
                 {
                     "error": f"Mission is already assigned to a cat - "
-                             f"{mission.cat.name} (ID: {mission.cat.id})."
+                    f"{mission.cat.name} (ID: {mission.cat.id})."
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )

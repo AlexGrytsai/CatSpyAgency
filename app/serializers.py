@@ -91,10 +91,10 @@ class MissionListSerializer(MissionSerializer):
 
     class Meta(MissionSerializer.Meta):
         fields = [
-                     "id",
-                     "cat",
-                     "completed",
-                 ] + MissionSerializer.Meta.fields
+            "id",
+            "cat",
+            "completed",
+        ] + MissionSerializer.Meta.fields
 
 
 class MissionUpdateSerializer(serializers.ModelSerializer):
