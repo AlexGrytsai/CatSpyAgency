@@ -44,3 +44,15 @@ class CatModelTest(TestCase):
 
         with self.assertRaises(ValidationError):
             cat.clean()
+
+class TargetModelTest(TestCase):
+    def test_create_target_model(self):
+        target = TargetModel.objects.create(name="Target1", country="Country1")
+        self.assertEqual(target.name, "Target1")
+        self.assertEqual(target.country, "Country1")
+        self.assertFalse(target.completed)
+
+    def test_target_notes(self):
+        target = TargetModel.objects.create(name="Target2", country="Country2",
+                                            notes="Important mission")
+        self.assertEqual(target.notes, "Important mission")
