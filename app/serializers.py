@@ -30,3 +30,8 @@ class TargetModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = TargetModel
         fields = ["name", "country"]
+
+
+class TargetListSerializer(TargetModelSerializer):
+    class Meta(TargetModelSerializer.Meta):
+        fields = ["id", "name", "country", "completed", "notes"]
