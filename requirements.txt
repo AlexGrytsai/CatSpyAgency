@@ -8,6 +8,7 @@ cffi==1.17.1
 charset-normalizer==3.4.0
 click==8.1.7
 colorama==0.4.6
+coverage==7.6.9
 Django==5.1.4
 django-debug-toolbar==4.4.6
 django-extensions==3.2.3
