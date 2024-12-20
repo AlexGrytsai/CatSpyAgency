@@ -1,4 +1,5 @@
 from django.http import HttpRequest
+from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -9,7 +10,38 @@ from app.permissions import IsAdminOrCatAssigned
 from app.serializers import CatSerializer, CatUpdateSerializer, \
     MissionSerializer, MissionListSerializer, MissionUpdateSerializer
 
-
+@extend_schema_view(
+    list=extend_schema(
+        summary="List all spy cats",
+        description="Retrieve a list of all cats.",
+        tags=["Cats"],
+    ),
+    create=extend_schema(
+        summary="Create a new spy cat",
+        description="Create a new cat. Need to be admin.",
+        tags=["Cats"],
+    ),
+    retrieve=extend_schema(
+        summary="Retrieve a specific spy cat",
+        description="Retrieve a specific cat by ID.",
+        tags=["Cats"],
+    ),
+    update=extend_schema(
+        summary="Update a specific spy cat",
+        description="Update a cat's details. Need to be admin.",
+        tags=["Cats"],
+    ),
+    partial_update=extend_schema(
+        summary="Partially update a specific spy cat",
+        description="Partially update a cat's details. Need to be admin.",
+        tags=["Cats"],
+    ),
+    destroy=extend_schema(
+        summary="Delete a specific spy cat",
+        description="Delete a specific cat. Need to be admin.",
+        tags=["Cats"],
+    )
+)
 class CatViewSet(viewsets.ModelViewSet):
     queryset = CatModel.objects.all()
     permission_classes = (IsAuthenticated,)
