@@ -45,6 +45,7 @@ class CatModelTest(TestCase):
         with self.assertRaises(ValidationError):
             cat.clean()
 
+
 class TargetModelTest(TestCase):
     def test_create_target_model(self):
         target = TargetModel.objects.create(name="Target1", country="Country1")
@@ -56,3 +57,46 @@ class TargetModelTest(TestCase):
         target = TargetModel.objects.create(name="Target2", country="Country2",
                                             notes="Important mission")
         self.assertEqual(target.notes, "Important mission")
+
+
+class MissionModelTest(TestCase):
+    def setUp(self):
+        self.cat = CatModel.objects.create(name="SpyCat", breed="Siamese",
+                                           experience=5, salary=1000)
+        self.target1 = TargetModel.objects.create(name="Target1",
+                                                  country="Country1")
+        self.target2 = TargetModel.objects.create(name="Target2",
+                                                  country="Country2")
+
+    def test_create_mission_model(self):
+        mission = MissionModel.objects.create(cat=self.cat)
+        mission.targets.add(self.target1, self.target2)
+        self.assertEqual(mission.cat, self.cat)
+        self.assertEqual(mission.targets.count(), 2)
+        self.assertFalse(mission.completed)
+
+    def test_check_and_complete_mission(self):
+        mission = MissionModel.objects.create(cat=self.cat)
+        mission.targets.add(self.target1, self.target2)
+
+        self.target1.completed = True
+        self.target2.completed = True
+        self.target1.save()
+        self.target2.save()
+
+        mission.check_and_complete_mission()
+        self.assertTrue(mission.completed)
+
+    def test_delete_mission_with_cat(self):
+        mission = MissionModel.objects.create(cat=self.cat)
+        mission.targets.add(self.target1)
+
+        with self.assertRaises(ValidationError):
+            mission.delete()
+
+    def test_delete_mission_without_cat(self):
+        mission = MissionModel.objects.create()
+        mission.targets.add(self.target1)
+
+        mission.delete()
+        self.assertFalse(MissionModel.objects.filter(id=mission.id).exists())
