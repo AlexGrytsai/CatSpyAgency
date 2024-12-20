@@ -105,6 +105,7 @@ class MissionModel(models.Model):
     def check_and_complete_mission(self):
         if all(target.completed for target in self.targets.all()):
             self.completed = True
+            self.cat = None
             self.save()
 
     def delete(self, *args, **kwargs):
