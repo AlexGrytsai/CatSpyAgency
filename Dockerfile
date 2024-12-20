@@ -19,5 +19,6 @@ ENV PORT=8000
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "python manage.py migrate && \
+CMD ["sh", "-c", "python manage.py wait_for_db && \
+                  python manage.py migrate && \
                   gunicorn --bind 0.0.0.0:$PORT SCA.wsgi:application"]
