@@ -98,3 +98,22 @@ class MissionViewSet(viewsets.ModelViewSet):
 
         serializer = MissionListSerializer(mission)
         return Response(serializer.data)
+
+    @action(
+        detail=True,
+        methods=["GET"],
+        url_path="finish mission",
+        url_name="finish mission",
+        permission_classes=[IsAdminUser],
+    )
+    def finish_mission(self, request: HttpRequest, pk: int = None) -> Response:
+        mission: MissionModel = self.get_object()
+
+        if not mission.completed:
+            mission.completed = True
+            mission.cat = None
+            mission.save()
+
+        return Response(
+            {"success": "Mission completed."}, status=status.HTTP_200_OK
+        )
