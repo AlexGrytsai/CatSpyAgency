@@ -1,7 +1,7 @@
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
-from app.models import CatModel
+from app.models import CatModel, TargetModel
 
 
 class CatSerializer(serializers.ModelSerializer):
@@ -24,3 +24,9 @@ class CatUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CatModel
         fields = ["salary"]
+
+
+class TargetModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TargetModel
+        fields = ["name", "country"]
