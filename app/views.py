@@ -83,8 +83,10 @@ class CatViewSet(viewsets.ModelViewSet):
         tags=["Missions"],
     ),
     partial_update=extend_schema(
+        summary="Partially update a specific mission",
         description="Partially update a mission's details. "
-                    "Need to be admin or cat assigned."
+                    "Need to be admin or cat assigned.",
+        tags=["Missions"],
     ),
     destroy=extend_schema(
         summary="Delete a specific mission",
