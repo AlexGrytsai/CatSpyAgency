@@ -133,6 +133,12 @@ This will run all the tests defined in the `tests` directory.
 This project is licensed under the MIT License. See the LICENSE file for more
 details.
 
+## Postman Collection
+
+The full Postman collection for the API endpoints is available here:
+
+- [Spy Cat Agency API Postman Collection](https://myteam-8118.postman.co/workspace/MyTeam~f8e6a241-e614-4d85-87e0-c60f6938a26f/collection/36135448-43ada44a-b744-432e-81f0-a9eb534e38ac?action=share&creator=36135448)
+
 ----------
 
 This README provides an overview of the system's functionality, setup, and
