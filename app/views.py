@@ -148,8 +148,8 @@ class MissionViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["GET"],
-        url_path="assignats cat",
-        url_name="assignats cat",
+        url_path="assignats-cat",
+        url_name="assignats_cat",
         permission_classes=[IsAdminUser],
     )
     def assignats_cat_to_mission(
@@ -198,8 +198,8 @@ class MissionViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["GET"],
-        url_path="finish mission",
-        url_name="finish mission",
+        url_path="finish-mission",
+        url_name="finish_mission",
         permission_classes=[IsAdminUser],
     )
     def finish_mission(self, request: HttpRequest, pk: int = None) -> Response:
