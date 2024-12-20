@@ -83,3 +83,15 @@ class MissionSerializer(serializers.ModelSerializer):
             mission.targets.add(target)
 
         return mission
+
+
+class MissionListSerializer(MissionSerializer):
+    targets = TargetListSerializer(many=True, read_only=True)
+    cat = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta(MissionSerializer.Meta):
+        fields = [
+                     "id",
+                     "cat",
+                     "completed",
+                 ] + MissionSerializer.Meta.fields
