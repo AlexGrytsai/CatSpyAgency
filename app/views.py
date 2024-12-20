@@ -1,5 +1,6 @@
 from django.http import HttpRequest
-from drf_spectacular.utils import extend_schema_view, extend_schema
+from drf_spectacular.utils import extend_schema_view, extend_schema, \
+    OpenApiResponse
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -9,6 +10,7 @@ from app.models import CatModel, MissionModel
 from app.permissions import IsAdminOrCatAssigned
 from app.serializers import CatSerializer, CatUpdateSerializer, \
     MissionSerializer, MissionListSerializer, MissionUpdateSerializer
+
 
 @extend_schema_view(
     list=extend_schema(
@@ -58,6 +60,62 @@ class CatViewSet(viewsets.ModelViewSet):
         return super().get_serializer_class()
 
 
+@extend_schema_view(
+    list=extend_schema(
+        summary="List all missions",
+        description="Retrieve a list of all missions.",
+        tags=["Missions"],
+    ),
+    create=extend_schema(
+        summary="Create a new mission",
+        description="Create a new mission. Need to be admin.",
+        tags=["Missions"],
+    ),
+    retrieve=extend_schema(
+        summary="Retrieve a specific mission",
+        description="Retrieve a specific mission by ID.",
+        tags=["Missions"],
+    ),
+    update=extend_schema(
+        summary="Update a specific mission",
+        description="Update a mission's details. "
+                    "Need to be admin or cat assigned.",
+        tags=["Missions"],
+    ),
+    partial_update=extend_schema(
+        description="Partially update a mission's details. "
+                    "Need to be admin or cat assigned."
+    ),
+    destroy=extend_schema(
+        summary="Delete a specific mission",
+        description="Delete a specific mission. Need to be admin.",
+        tags=["Missions"],
+    ),
+    assignats_cat_to_mission=extend_schema(
+        summary="Assign a cat to a mission",
+        description="Assign a cat to a mission. Need to be admin.",
+        tags=["Missions"],
+        responses={
+            200: MissionListSerializer,
+            400: OpenApiResponse(
+                description="Bad Request, missing or invalid data"
+            ),
+            404: OpenApiResponse(
+                description="Cat not found"
+            ),
+        }
+    ),
+    finish_mission=extend_schema(
+        summary="Finish a mission",
+        description="Finish a mission and unassign the cat. Need to be admin.",
+        tags=["Missions"],
+        responses={
+            200: OpenApiResponse(
+                description="Mission completed"
+            ),
+        }
+    )
+)
 class MissionViewSet(viewsets.ModelViewSet):
     queryset = (
         MissionModel.objects.all()
